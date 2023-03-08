@@ -1,9 +1,6 @@
 import re
-from os.path import join
-from os import makedirs
+import requests
 from urllib.request import urlopen
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import as_completed
 from bs4 import BeautifulSoup
 
 # download html and return parsed doc or None on error
@@ -39,32 +36,33 @@ def get_ebook_id(url="https://www.gutenberg.org/files/58025"):
     return url.split("/")[4]
 
 # download one book from project gutenberg
-def download_book(ebook_id, save_path):
+def download_books(ebook_ids):
     # construct the download url
-    url = f'https://www.gutenberg.org/cache/epub/{ebook_id}/pg{ebook_id}.txt'
-    # download the content
-    print(url)
-    data = download_url(url)
-    if data is None:
-        return f'Failed to download {url}'
-    # create local path
-    save_file = join(save_path, f'{ebook_id}.txt')
-    # save book to file
-    with open(save_file, 'wb') as file:
-        file.write(data)
-    return f'Saved {save_file}'
-
-# download all top books from project gutenberg
+    urls = []
+    for e_id in ebook_ids:
+        urls.append(f'https://www.gutenberg.org/cache/epub/{e_id}/pg{e_id}.epub')
+    
+    for url, filename in zip(urls, ebook_ids):
+        r = requests.get(url, stream=True)
+        with open("books/"+filename+".epub", 'wb') as fd:
+            for chunk in r.iter_content(chunk_size=256):
+                fd.write(chunk)
+    print(f"file {filename} downloaded succesfully")
+    
+# download all books from project gutenberg
 def download_all_books(url, save_path):
     # download the page that lists top books
     data = download_url(url)
     print(f'.downloaded {url}')
     # extract all links from the page
-    links = get_urls_from_html(data)
-    [ download_book(get_ebook_id(url), save_path) for url in links ]
+    urls = get_urls_from_html(data)
+    ebook_ids = [ get_ebook_id(url) for url in urls ]
+    download_books(ebook_ids)
 
 # entry point
 URL = 'https://www.gutenberg.org/files/58025/58025-h/58025-h.htm#N51548'
 DIR = 'books'
-# download top books
-download_all_books(URL, DIR)
+
+if __name__ == "__main__":
+    # download top books
+    download_all_books(URL, DIR)
