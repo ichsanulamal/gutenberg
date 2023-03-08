@@ -1,40 +1,36 @@
-import requests
-import json
+import requests  
+import json  
+  
+session = requests.Session()  
+url= 'http://localhost/moodle'  
+username = 'admin'  
+password = 'ijQgmjjPDC2xHrXyM2!'
+  
+# API call 1 : getting wstoken to access moodle mobile app API  
+payload = {'username': username, 'password': password, 'service': 'moodle_mobile_app'}  
+response = session.post(url + '/login/token.php?', data=payload)  
+  
+response_j = json.loads(response.content.decode('utf-8'))  
+web_token = response_j['token']
+  
+# API call 2 : getting courses from mobile app  
+payload = {'wsfunction': 'core_course_get_courses', 'wstoken': web_token, 'moodlewsrestformat': 'json'}  
+response = session.post(url + '/webservice/rest/server.php?', data=payload)  
+response_j = json.loads(response.content.decode('utf-8'))
+course_ids = [course['id'] for course in response_j]
 
-# Moodle API URL and token
-url = 'http://localhost/moodle/webservice/rest/server.php'
-token = '48231b3e5a9d5562fe362556c0d5b5e2'
+# get all feedback
+for course_id in course_ids:
+    payload = {'wsfunction': 'mod_feedback_get_feedbacks_by_courses', 'courseids[0]': course_id, 'wstoken': web_token, 'moodlewsrestformat': 'json'}  
+    response = session.post(url + '/webservice/rest/server.php?', data=payload)  
+    response_j = json.loads(response.content.decode('utf-8'))
+    for feedback in response_j['feedbacks']:        
+        payload = {'wsfunction': 'mod_feedback_get_responses_analysis', 'feedbackid': feedback['id'], 'wstoken': web_token, 'moodlewsrestformat': 'json'}
+        response = session.post(url + '/webservice/rest/server.php?', data=payload)
+        response_j = json.loads(response.content.decode('utf-8'))
+        print(response_j)
+        for attempt in response_j['attempts']:
+            print(attempt)
+    #     response_j = json.loads(response.content.decode('utf-8'))
+    # print(response_j)
 
-# Headers and data for API requests
-headers = {'content-type': 'application/json'}
-data = {'wstoken': token}
-
-# Function to get all feedback responses for a given feedback activity
-def get_feedback_responses(feedback_id):
-    function = 'mod_feedback_get_responses'
-    params = {'feedbackid': feedback_id}
-    response = requests.post(url, headers=headers, data=json.dumps({'wsfunction': function, 'arguments': params, **data}))
-    response_data = json.loads(response.text)
-    return response_data
-
-# Function to get all feedback activities for a list of courses
-def get_feedback_activities(course_ids):
-    function = 'mod_feedback_get_feedbacks_by_courses'
-    params = {'courseids': course_ids}
-    response = requests.post(url, headers=headers, data=json.dumps({'wsfunction': function, 'arguments': params, **data}))
-    response_data = json.loads(response.text)
-    return response_data
-
-# Example usage
-course_ids = [1, 2, 3] # List of course IDs
-feedback_activities = get_feedback_activities(course_ids)
-
-for feedback_activity in feedback_activities:
-    feedback_id = feedback_activity['id']
-    feedback_name = feedback_activity['name']
-    feedback_responses = get_feedback_responses(feedback_id)
-    print(f"Feedback activity: {feedback_name} (ID: {feedback_id})")
-    for response in feedback_responses:
-        response_id = response['id']
-        response_value = response['values']
-        print(f"Response ID: {response_id}, Response value: {response_value}")
