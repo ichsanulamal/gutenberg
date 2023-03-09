@@ -19,9 +19,6 @@ for file in os.listdir():
         file_path = file_path.replace("epub", "txt")
         with open(file_path, "w", encoding="utf-8") as file1:
             # Writing data to a file
-            file1.write(res))
+            file1.write(res)
 
-for file in os.listdir():
-    # Check whether file is in text format or not
-    if file.endswith(".epub"):
-        file_path = f"{path}\{file}"
+
