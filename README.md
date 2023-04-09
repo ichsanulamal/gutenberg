@@ -1,1 +1,1 @@
-# Nietzsche Analysis
+# Ebook Analysis
