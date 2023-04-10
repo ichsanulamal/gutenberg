@@ -14,6 +14,9 @@
 - [ ] Concordance
 - [ ] Pause Marks
 - [ ] Word Similarity
+- [D] To Dataset
+
+
 
 ## Example
 
