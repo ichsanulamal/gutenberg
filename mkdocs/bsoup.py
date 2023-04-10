@@ -12,7 +12,6 @@ html_content = response.text
 # Parse the HTML content using BeautifulSoup
 soup = BeautifulSoup(html_content, 'html.parser')
 
-
 # Find the table element with a summary attribute
 table = soup.find('table', {'summary': ''})
 
@@ -20,7 +19,7 @@ table = soup.find('table', {'summary': ''})
 links = []
 for link in table.find_all('a'):
     href = link.get('href')
-    if href is not None:
+    if href is not None and href[0] != '#':
         links.append(href)
 
 # Print the links

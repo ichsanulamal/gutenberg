@@ -36,28 +36,28 @@ def get_ebook_id(url="https://www.gutenberg.org/files/58025"):
     return url.split("/")[4]
 
 # download one book from project gutenberg
-def download_books(ebook_ids):
+def download_books(ebook_ids, format='.epub'):
     # construct the download url
     urls = []
     for e_id in ebook_ids:
-        urls.append(f'https://www.gutenberg.org/cache/epub/{e_id}/pg{e_id}.epub')
+        urls.append(f'https://www.gutenberg.org/cache/epub/{e_id}/pg{e_id}{format}')
     
     for url, filename in zip(urls, ebook_ids):
         r = requests.get(url, stream=True)
-        with open("books/"+filename+".epub", 'wb') as fd:
+        with open("books/"+filename+format, 'wb') as fd:
             for chunk in r.iter_content(chunk_size=256):
                 fd.write(chunk)
     print(f"file {filename} downloaded succesfully")
     
 # download all books from project gutenberg
-def download_all_books(url, save_path):
+def download_all_books(url, save_path, format='.epub'):
     # download the page that lists top books
     data = download_url(url)
     print(f'.downloaded {url}')
     # extract all links from the page
     urls = get_urls_from_html(data)
     ebook_ids = [ get_ebook_id(url) for url in urls ]
-    download_books(ebook_ids)
+    download_books(ebook_ids, format)
 
 # entry point
 URL = 'https://www.gutenberg.org/files/58025/58025-h/58025-h.htm#N51548'
@@ -65,4 +65,4 @@ DIR = 'books'
 
 if __name__ == "__main__":
     # download top books
-    download_all_books(URL, DIR)
+    download_all_books(URL, DIR, 'rdf')
