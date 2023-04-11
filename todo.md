@@ -15,9 +15,3 @@
 - [ ] Pause Marks
 - [ ] Word Similarity
 - [D] To Dataset
-
-
-
-## Example
-
-Nietzsche's works

@@ -1,0 +1,8 @@
+<http://example.org/mason> <http://xmlns.com/foaf/0.1/nick> "mason"@en .
+<http://example.org/shyla> <http://xmlns.com/foaf/0.1/nick> "shyla"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://example.org/mason> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.org/mason> <http://xmlns.com/foaf/0.1/name> "Mason Carter" .
+<http://example.org/mason> <http://xmlns.com/foaf/0.1/mbox> <mailto:mason@example.org> .
+<http://example.org/shyla> <http://xmlns.com/foaf/0.1/name> "Shyla Sharples" .
+<http://example.org/shyla> <http://xmlns.com/foaf/0.1/mbox> <mailto:shyla@example.org> .
+<http://example.org/shyla> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
