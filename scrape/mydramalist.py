@@ -29,4 +29,6 @@ for item in items:
     res.append([title, country, year, type, score, progress])
 
 
-print(res)
+import pandas as pd
+
+print(pd.DataFrame(res).to_csv('./data/mdl/data.csv'))
