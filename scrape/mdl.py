@@ -1,7 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
+import configparser
 
-url = 'https://mydramalist.com/dramalist/Chanculus'
+# Config
+config = configparser.ConfigParser()
+config.read('config.ini')
+mdl_username = config.get('mdl', 'username')
+
+# Main app
+url = 'https://mydramalist.com/dramalist/' + mdl_username
 response = requests.get(url)
 html = response.text
 soup = BeautifulSoup(html, 'html.parser')

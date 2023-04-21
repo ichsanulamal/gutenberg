@@ -1,3 +1,5 @@
 *.epub
 *.txt
 books
+
+scrape/config.ini
