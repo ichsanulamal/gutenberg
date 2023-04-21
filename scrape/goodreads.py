@@ -1,7 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
+import configparser
 
-url = 'https://www.goodreads.com/review/list/74584614-ichsanul-amal?shelf=read'
+# Config
+config = configparser.ConfigParser()
+config.read('config.ini')
+gr_username = config.get('gr', 'username')
+
+import requests
+from bs4 import BeautifulSoup
+
+url = f'https://www.goodreads.com/review/list/{gr_username}?shelf=read'
 response = requests.get(url)
 html = response.text
 soup = BeautifulSoup(html, 'html.parser')

@@ -1,7 +1,15 @@
+import configparser
+
+# Config
+config = configparser.ConfigParser()
+config.read('config.ini')
+mal_username = config.get('mal', 'username')
+
 import requests
 from bs4 import BeautifulSoup
 
-url = 'https://myanimelist.net/animelist/laataiasu?status=7'
+
+url = f'https://myanimelist.net/animelist/{mal_username}?status=7'
 response = requests.get(url)
 html = response.text
 soup = BeautifulSoup(html, 'html.parser')
