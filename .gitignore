@@ -1,5 +1,6 @@
 *.epub
 *.txt
+*.html
 books
 
 scrape/config.ini
